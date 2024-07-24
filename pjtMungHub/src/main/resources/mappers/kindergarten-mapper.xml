@@ -1,0 +1,210 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kindergartenMapper">
+	<select id="selectMap" resultType="Kindergarten">
+		SELECT KIND_NO kindNo
+		,DIRECTOR_ID directorId
+		,REGION_NAME regionName
+		,KIND_ADDRESS
+		kindAddress
+		,KIND_NAME kindName
+		,KIND_CONTACT kindContact
+		,PLACE_X placeX
+		,PLACE_Y placeY
+		,STATUS
+		FROM KINDERGARTEN
+		WHERE STATUS = 'Y'
+	</select>
+
+	<select id="selectPets" parameterType="_int" resultType="Pet">
+		SELECT
+		PET_NO petNo
+		,BREED_NAME breed
+		,PET_NAME petName
+		,PET_AGE petAge
+		,PET_GENDER petGender
+		,WEIGHT weight
+		FROM PET
+		JOIN BREED USING (BREED_ID)
+		WHERE OWNER_NO = #{ownerNo}
+	</select>
+
+	<select id="selectPetByNo" parameterType="_int" resultType="Pet">
+		SELECT
+		P.PET_NO petNo
+		,B.BREED_NAME breed
+		,P.PET_NAME petName
+		,P.PET_AGE petAge
+		,P.PET_GENDER petGender
+		,P.WEIGHT weight
+		FROM PET P 
+		JOIN BREED B USING (BREED_ID)
+		WHERE P.PET_NO = #{petNo}
+	</select>
+ 
+	<select id="selectKindergarten" parameterType="_int"
+		resultType="Kindergarten">
+		SELECT KIND_NO kindNo
+		,DIRECTOR_ID directorId
+		,REGION_NAME
+		regionName
+		,KIND_ADDRESS kindAddress
+		,KIND_NAME kindName
+		,KIND_CONTACT
+		kindContact
+		,PLACE_X placeX
+		,PLACE_Y placeY
+		,STATUS
+		FROM KINDERGARTEN
+		WHERE KIND_NO = #{kindNo}
+		AND STATUS = 'Y'
+	</select>
+
+	<insert id="insertReg" parameterType="Registration">
+		INSERT INTO
+		REGISTRATION(RESERV_NO
+		,KIND_NO
+		,PET_NO
+		,USER_NO
+		,VISIT_DATE
+		,PET_INTRO
+		,PET_NOTE
+		,ORIGIN_NAME
+		,CHANGE_NAME
+		,APPROVAL)
+		VALUES (SEQ_REG.NEXTVAL
+		,#{kindNo}
+		,#{petNo}
+		,#{userNo}
+		,#{visitDate}
+		,#{petIntro}
+		,#{petNote}
+		,#{originName}
+		,#{changeName}
+		,DEFAULT
+		)
+	</insert>
+
+	<select id="selectRegList" parameterType="_int"
+		resultType="Registration">
+		SELECT RESERV_NO reservNo
+		,R.KIND_NO kindNo
+		,K.KIND_NAME kindName
+		,R.PET_NO petNo
+		,PET_NAME petName
+		,BREED_NAME breed
+		,R.USER_NO userNo
+		,NAME userName
+		,VISIT_DATE visitDate
+		,PET_INTRO petIntro
+		,PET_NOTE petNote
+		,ORIGIN_NAME originName
+		,CHANGE_NAME changeName
+		,APPROVAL approval
+		,REASON reason
+		FROM REGISTRATION R, PET P, MEMBER M, KINDERGARTEN K, BREED B
+		WHERE R.USER_NO = M.USER_NO
+		AND K.KIND_NO = R.KIND_NO
+		AND R.PET_NO =	P.PET_NO
+		AND P.BREED_ID = B.BREED_ID
+		AND P.OWNER_NO = M.USER_NO
+		AND
+		R.USER_NO = #{userNo}
+	</select>
+
+	<select id="selectRegList2" parameterType="_int"
+		resultType="Registration">
+		SELECT RESERV_NO reservNo
+		,R.KIND_NO kindNo
+		,K.KIND_NAME kindName
+		,R.PET_NO petNo
+		,PET_NAME petName
+		,BREED_NAME breed
+		,R.USER_NO userNo
+		,NAME userName
+		,VISIT_DATE visitDate
+		,PET_INTRO petIntro
+		,PET_NOTE petNote
+		,ORIGIN_NAME originName
+		,CHANGE_NAME changeName
+		,APPROVAL approval
+		,REASON reason
+		FROM REGISTRATION R, PET P, MEMBER M, KINDERGARTEN K, BREED B
+		WHERE R.USER_NO = M.USER_NO
+		AND K.KIND_NO = R.KIND_NO
+		AND R.PET_NO =	P.PET_NO
+		AND P.BREED_ID = B.BREED_ID
+		AND P.OWNER_NO = M.USER_NO
+		AND K.DIRECTOR_ID = #{userNo}
+	</select>
+
+	<select id="selectRegistration" parameterType="_int"
+		resultType="Registration">
+		SELECT RESERV_NO reservNo
+		,R.KIND_NO kindNo
+		,K.KIND_NAME kindName
+		,R.PET_NO petNo
+		,PET_NAME petName
+		,BREED_NAME breed
+		,R.USER_NO userNo
+		,NAME userName
+		,VISIT_DATE visitDate
+		,PET_INTRO petIntro
+		,PET_NOTE petNote
+		,ORIGIN_NAME originName
+		,CHANGE_NAME changeName
+		,APPROVAL approval
+		,REASON reason
+		FROM REGISTRATION R, PET P, MEMBER M, KINDERGARTEN K, BREED B
+		WHERE R.USER_NO = M.USER_NO
+		AND K.KIND_NO = R.KIND_NO
+		AND R.PET_NO =
+		P.PET_NO
+		AND P.BREED_ID = B.BREED_ID
+		AND P.OWNER_NO = M.USER_NO
+		AND
+		R.RESERV_NO = #{reservNo}
+	</select>
+
+	<delete id="deleteRegistration"
+		parameterType="_int">
+		DELETE
+		FROM REGISTRATION
+		WHERE RESERV_NO = #{reservNo}
+	</delete>
+
+	<update id="updateRegistration">
+	UPDATE REGISTRATION SET	
+							VISIT_DATE = #{visitDate},
+							PET_INTRO = #{petIntro},
+							PET_NOTE = #{petNote},
+							ORIGIN_NAME = #{originName},
+							CHANGE_NAME = #{changeName}
+	WHERE RESERV_NO = #{reservNo}
+	</update>
+
+	<update id="approveReg" parameterType="_int">
+	UPDATE REGISTRATION SET	APPROVAL = 'Y'
+	WHERE RESERV_NO = #{reservNo}
+	</update>
+
+	<update id="rejectReg" parameterType="Registration">
+	UPDATE REGISTRATION SET	APPROVAL = 'R',
+						REASON = #{reason}
+	WHERE RESERV_NO = #{reservNo}
+	</update>
+
+	<insert id="insertVac" parameterType="Vaccine">
+	INSERT INTO	VACCINE(FILE_NO
+						,PET_NO
+						,ORIGIN_NAME
+						,CHANGE_NAME)
+	VALUES (SEQ_VAC.NEXTVAL
+			,#{petNo}
+			,#{originName}
+			,#{changeName}
+			)
+	</insert>
+</mapper>

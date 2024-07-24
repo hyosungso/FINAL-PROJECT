@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="memberMapper">
+	<resultMap type="Member" id="memberResultSet">
+		<result column="USER_ID" property="userId"/>
+		<result column="USER_NO" property="userNo"/>
+		<result column="PASSWORD" property="password"/>
+		<result column="NAME" property="name"/>
+		<result column="PHONE" property="phone"/>
+		<result column="EMAIL" property="email"/>
+		<result column="ADDRESS" property="address"/>
+		<result column="PET_YN" property="petYN"/>
+		<result column="USER_GRADE" property="userGrade"/>
+		<result column="KIND_NAME" property="kindName"/>
+		<result column="STATUS" property="status"/>
+		<result column="JOIN_DATE" property="joinDate"/>
+		<result column="SITTER_STATUS" property="sitterStatus"/>
+	</resultMap>
+	<select id="loginMember" parameterType="Member" resultMap="memberResultSet">
+		SELECT * FROM MEMBER WHERE USER_ID=#{userId}
+	</select>
+	<select id="searchId" parameterType="Member" resultMap="memberResultSet">
+		SELECT USER_ID FROM MEMBER WHERE NAME=#{name} AND PHONE=#{phone}
+	</select>
+	<update id="changePw" parameterType="Member">
+		UPDATE MEMBER SET PASSWORD=#{password} WHERE USER_ID=#{userId} AND STATUS='Y'
+	</update>
+	<select id="checkId" parameterType="Member" resultMap="memberResultSet">
+		SELECT USER_ID FROM MEMBER WHERE USER_ID=#{userId} AND STATUS='Y'
+	</select>
+	<select id="newUserNo" resultType="_int">
+		SELECT SEQ_MEM.NEXTVAL FROM DUAL
+	</select>
+	<insert id="insertMember" parameterType="Member">
+		INSERT INTO MEMBER(USER_ID,USER_NO,PASSWORD,NAME,PHONE,EMAIL,ADDRESS,PET_YN,USER_GRADE) 
+		VALUES(#{userId},SEQ_MEM.NEXTVAL,#{password},#{name},#{phone},#{email},#{address},#{petYN},0)
+	</insert>
+	<insert id="insertTeacher" parameterType="Member">
+		INSERT INTO MEMBER(USER_ID,USER_NO,PASSWORD,NAME,PHONE,EMAIL,ADDRESS,PET_YN,USER_GRADE,KIND_NO,STATUS) 
+		VALUES(#{userId},SEQ_MEM.NEXTVAL,#{password},#{name},#{phone},#{email},#{address},#{petYN},1,#{kindName},'N')	
+	</insert>
+	<select id="selectPetList" parameterType="Member" resultType="Pet">
+		SELECT PET_NO petNo, BREED_ID breed, PET_NAME petName, PET_AGE petAge, PET_GENDER petGender, WEIGHT weight, PHOTO_NO photoNo FROM PET WHERE OWNER_NO=#{userNo}
+	</select>
+	<select id="selectPetPhoto" parameterType="Pet" resultType="PetPhoto">
+		SELECT PHOTO_NO photoNo, ORIGIN_NAME originName,CHANGE_NAME changeName,FILE_PATH filePath,UPLOAD_DATE uploadDate, STATUS status FROM PET_PHOTO WHERE PHOTO_NO=#{photoNo}
+	</select>
+	<select id="selectKindList" resultType="Kindergarten">
+		SELECT KIND_NO kindNo, KIND_NAME kindName FROM KINDERGARTEN WHERE STATUS='Y' AND KIND_NAME LIKE #{kindName}
+	</select>
+	<select id="selectBreedList" resultType="Breed">
+		SELECT BREED_ID breedId, BREED_NAME breedName FROM BREED
+	</select>
+	<select id="msgCount" parameterType="Member" resultType="_int">
+		SELECT COUNT(*) FROM MESSAGE WHERE RECEIVER_NO=#{userNo}
+	</select>
+	<select id="selectMessageList" parameterType="Member" resultType="Message">
+		SELECT MESSAGE_NO messageNo, USER_ID sender, MESSAGE_CONTENT messageContent, MESSAGE_DATE messageDate FROM MESSAGE MSG JOIN MEMBER M ON(MSG.SENDER_NO=M.USER_NO) WHERE MSG.RECEIVER_NO=#{userNo} AND MSG.STATUS LIKE '_Y%'
+	</select>
+	<select id="getPhotoNo" resultType="_int">
+		SELECT PET_PHOTO_SEQ.NEXTVAL FROM DUAL
+	</select>
+	<insert id="insertPetPhoto" parameterType="PetPhoto">
+		INSERT INTO PET_PHOTO VALUES(#{photoNo},#{originName},#{changeName},#{filePath},DEFAULT,DEFAULT)
+	</insert>
+	<insert id="insertPet" parameterType="Pet">
+		INSERT INTO PET VALUES(SEQ_PET.NEXTVAL,#{breed},#{ownerNo},#{petName},#{petAge},#{petGender},#{weight},#{photoNo})
+	</insert>
+	<select id="selectPetByNo" parameterType="Pet" resultType="Pet">
+		SELECT PET_NO petNo, BREED_ID breed, PET_NAME petName, PET_AGE petAge, PET_GENDER petGender, WEIGHT weight, PHOTO_NO photoNo FROM PET WHERE PET_NO=#{petNo}
+	</select>
+	<update id="updatePet" parameterType="Pet">
+		UPDATE PET SET BREED_ID=#{breed},PET_NAME=#{petName},PET_AGE=#{petAge},PET_GENDER=#{petGender},WEIGHT=#{weight},PHOTO_NO=#{photoNo} WHERE PET_NO=#{petNo}
+	</update>
+	<update id="updateMember" parameterType="Member">
+		UPDATE MEMBER SET NAME=#{name},PHONE=#{phone},EMAIL=#{email},ADDRESS=#{address},PET_YN=#{petYN} WHERE USER_NO=#{userNo}
+	</update>
+	<select id="searchUser" parameterType="Member" resultMap="memberResultSet">
+		SELECT * FROM MEMBER WHERE USER_ID LIKE #{userId}
+	</select>
+	<select id="myKind" parameterType="Member" resultType="Kindergarten">
+		SELECT KIND_NO kindNO, DIRECTOR_ID directorId, KIND_NAME kindName FROM KINDERGARTEN WHERE DIRECTOR_ID=#{userNo} AND STATUS='Y'
+	</select>
+	<select id="searchTeacherByKind" parameterType="Kindergarten" resultType="Member">
+		SELECT USER_ID userId,USER_NO userNo,NAME name,PHONE phone,EMAIL email,ADDRESS address,PET_YN petYN,KIND_NAME kindName,JOIN_DATE joinDate, M.STATUS status FROM MEMBER M JOIN KINDERGARTEN USING(KIND_NO) WHERE KIND_NO=#{kindNo}
+	</select>
+	<update id="acceptTeacher" parameterType="Member">
+		UPDATE MEMBER SET USER_GRADE=#{userGrade}, STATUS='Y' WHERE USER_NO=#{userNo}
+	</update>
+	<update id="notTeacher" parameterType="Member">
+		UPDATE MEMBER SET STATUS='Y', USER_GRADE=#{userGrade}, KIND_NO='' WHERE USER_NO=#{userNo}
+	</update>
+	<update id="newMaster" parameterType="Member">
+		UPDATE KINDERGARTEN SET DIRECTOR_ID=#{userNo} WHERE KIND_NAME=#{kindName} AND STATUS='Y'
+	</update>
+	<update id="deletePhoto" parameterType="Pet">
+		UPDATE PET_PHOTO SET STATUS='N' WHERE PHOTO_NO=#{photoNo} AND STATUS='Y'
+	</update>
+	<update id="updateMsg" parameterType="Message">
+		UPDATE MESSAGE SET STATUS=#{status} WHERE MESSAGE_NO=#{messageNo}
+	</update>
+	<insert id="sendMsg" parameterType="Message">
+		INSERT INTO MESSAGE VALUES(SEQ_MSG.NEXTVAL,#{sender},#{receiver},#{messageContent},DEFAULT,DEFAULT)
+	</insert>
+	<select id="socialMember" parameterType="Member" resultMap="memberResultSet">
+		SELECT * FROM MEMBER WHERE (USER_ID=#{email} OR EMAIL=#{email}) AND NAME=#{name}
+	</select>
+	<update id="disableUser" parameterType="Member">
+		UPDATE USER SET STATUS='N' WHERE USER_ID=#{userId} AND STATUS='Y'
+	</update>
+
+	<select id="isUserRestricted" parameterType="int" resultType="boolean">
+		SELECT CASE 
+    		WHEN RESTRICTED_UNTIL > LOCALTIMESTAMP THEN 1
+    		ELSE 0
+		END AS DAYS
+		FROM MEMBER
+		WHERE USER_NO = #{userNo}
+	</select>
+	<update id="restrictUser" parameterType="hashmap">
+		UPDATE MEMBER SET RESTRICTED_UNTIL = SYSTIMESTAMP + INTERVAL '${days}' DAY
+		WHERE USER_NO = #{userNo}
+	</update>
+	<select id="searchSitterStatus" parameterType="PetSitter" resultType="PetSitter">
+		SELECT PET_SITTER_NO petSitterNo, PET_SITTER_NAME petSitterName, INTRODUCE introduce, DOG_KEYWORD dogKeyword, TYPE_KEYWORD typeKeyword, PHONE phone, EMAIL email, ORIGIN_NAME originName, FILE_PATH filePath, STATUS status FROM PET_SITTER WHERE PET_SITTER_NO=#{petSitterNo}
+	</select>
+	<select id="getChatList" parameterType="Member" resultType="Chat">
+		SELECT SITTER_NO sitterNo FROM CHAT WHERE MASTER_NO=#{userNo} AND STATUS='Y' GROUP BY SITTER_NO
+	</select>
+	<select id="getNewChat" parameterType="Chat" resultType="Chat">
+		SELECT SITTER_NO sitterNo, MASTER_NO masterNo, CHAT_CONTENT chatContent, CHAT_DATE chatDate, CHAT_WRITER chatWriter FROM (SELECT * FROM CHAT WHERE SITTER_NO=#{sitterNo} AND MASTER_NO=#{masterNo} ORDER BY CHAT_NO DESC) WHERE ROWNUM=1 
+	</select>
+	<select id="getSitterList" resultType="PetSitter">
+		SELECT PET_SITTER_NO petSitterNo, PET_SITTER_NAME petSitterName, INTRODUCE introduce, DOG_KEYWORD dogKeyword, TYPE_KEYWORD typeKeyword, PHONE phone, EMAIL email, ORIGIN_NAME originName, FILE_PATH filePath, STATUS status FROM PET_SITTER
+	</select>
+	<select id="selectChatList" parameterType="Chat" resultType="Chat">
+		SELECT CHAT_NO chatNo, SITTER_NO sitterNo, MASTER_NO masterNo, CHAT_CONTENT chatContent, CHAT_DATE chatDate, CHAT_WRITER chatWriter FROM CHAT WHERE SITTER_NO=#{sitterNo} AND MASTER_NO=#{masterNo}
+	</select>
+	<select id="selectSitterbySocial" parameterType="Member" resultType="PetSitter">
+		SELECT PET_SITTER_NO petSitterNo, PET_SITTER_NAME petSitterName, INTRODUCE introduce, DOG_KEYWORD dogKeyword, TYPE_KEYWORD typeKeyword, PHONE phone, EMAIL email, ORIGIN_NAME originName, FILE_PATH filePath, STATUS status FROM PET_SITTER WHERE EMAIL=#{email}
+	</select>
+	<select id="getSitterChatList" parameterType="PetSitter" resultType="Chat">
+		SELECT MASTER_NO masterNo FROM CHAT WHERE SITTER_NO=#{petSitterNo} GROUP BY MASTER_NO
+	</select>
+	<select id="selectMaster" parameterType="Member" resultMap="memberResultSet">
+		SELECT USER_NO, USER_ID, NAME, PHONE, EMAIL, STATUS FROM MEMBER WHERE USER_NO=#{userNo}
+	</select>
+	<select id="getRestrictedUntil" parameterType="_int" resultType="java.time.LocalDateTime">
+	SELECT RESTRICTED_UNTIL FROM MEMBER WHERE USER_NO = #{userNo}
+	</select>
+	<insert id="chatUpload" parameterType="Chat">
+		INSERT INTO CHAT VALUES(SEQ_CHAT.NEXTVAL,#{sitterNo},#{masterNo},#{chatContent},SYSDATE,#{chatWriter},'N')
+	</insert>
+	<update id="chatRead" parameterType="Chat">
+		UPDATE CHAT SET STATUS='Y' WHERE MASTER_NO=#{masterNo} AND SITTER_NO=#{sitterNo} AND CHAT_WRITER='SITTER'
+	</update>
+	<update id="saveChat" parameterType="Chat">
+		UPDATE CHAT SET STATUS=#{status},CHAT_CONTENT=#{chatContent},CHAT_WRITER=#{chatWriter},CHAT_DATE=SYSDATE WHERE SITTER_NO=#{sitterNo} AND MASTER_NO=#{masterNo}
+	</update>
+	<update id="deleteChat" parameterType="Chat">
+		UPDATE CHAT SET STATUS='N' WHERE MASTER_NO=#{masterNo} AND SITTER_NO=#{sitterNo}
+	</update>
+	<insert id="createChat" parameterType="Chat">
+		INSERT INTO CHAT VALUES(SEQ_CHAT.NEXTVAL,#{sitterNo},#{masterNo},'',SYSDATE,'MASTER','Y')
+	</insert>
+</mapper>

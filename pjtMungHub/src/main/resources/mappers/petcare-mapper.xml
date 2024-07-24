@@ -1,0 +1,833 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="petcareMapper">
+
+	<!-- 펫시터 resultMap -->
+	<resultMap type="PetSitter" id="petSitterResultSet">
+		<result column="PET_SITTER_NO" property="petSitterNo"/>
+		<result column="PET_SITTER_NAME" property="petSitterName"/>
+		<result column="INTRODUCE" property="introduce"/>
+		<result column="DOG_KEYWORD" property="dogKeyword"/>
+		<result column="TYPE_KEYWORD" property="typeKeyword"/>
+		<result column="PHONE" property="phone"/>
+		<result column="EMAIL" property="email"/>
+		<result column="ORIGIN_NAME" property="originName"/>
+		<result column="FILE_PATH" property="filePath"/>
+		<result column="STATUS" property="status"/>
+	</resultMap>
+	
+	<!-- 요금 resultMap -->
+	<resultMap type="Price" id="priceResultSet">
+	    <result column="DURATION_NO" property="durationNo"/>
+	    <result column="PET_TYPE_NO" property="petTypeNo"/>
+	    <result column="TOTAL_PRICE" property="totalPrice"/>
+	    <result column="PRICE_NAME" property="priceName"/>
+	</resultMap>
+	
+	<!-- 예약 resultMap -->
+	<resultMap type="Reservation" id="reservationResultSet">
+	    <result column="RESERVATION_ID" property="reservationId"/>
+	    <result column="PET_OWNER_NAME" property="petOwnerName"/>
+	    <result column="ADDRESS" property="address"/>
+	    <result column="PHONE" property="phone"/>
+	    <result column="VISIT_DATE" property="visitDate"/>
+	    <result column="START_TIME" property="startTime"/>
+	    <result column="END_TIME" property="endTime"/>
+	    <result column="RESERVATION_DATE" property="reservationDate"/>
+	    <result column="CAUTION" property="caution"/>
+	    <result column="PET_NAME" property="petName"/>
+	    <result column="STATUS" property="status"/>
+	    <result column="PET_SITTER_NO" property="petSitterNo"/>
+	    <result column="DURATION" property="duration"/>
+	    <result column="PET_TYPE_NO" property="petTypeNo"/>
+	    <result column="ORIGIN_NAME" property="originName"/>
+	    <result column="CHANGE_NAME" property="changeName"/>
+	    <result column="PAYMENT_STATUS" property="paymentStatus"/>
+	    <result column="TOTAL_AMOUNT" property="totalAmount"/>
+	</resultMap>
+	
+	<!-- 결제 resultMap -->
+	<resultMap type="Payment" id="paymentResultSet">
+	    <result column="PAYMENT_ID" property="paymentId"/>
+	    <result column="PG_NAME" property="pgName"/>
+	    <result column="USER_NAME" property="userName"/>
+	    <result column="USER_NO" property="userNo"/>
+	    <result column="AMOUNT" property="amount"/>
+	    <result column="PHONE" property="phone"/>
+	    <result column="ADDRESS" property="address"/>
+	    <result column="PAYMENT_DATE" property="paymentDate"/>
+	    <result column="PAYMENT_METHOD" property="paymentMethod"/>
+	    <result column="PRODUCT_NAME" property="productName"/>
+	    <result column="PAYMENT_STATUS" property="paymentStatus"/>
+	    <result column="S.STATUS_NAME" property="statusName"/>
+	    <result column="DIFFERENT_NO" property="differentNo"/>
+	    <result column="RESERVATION_NO" property="reservationNo"/>
+	    <result column="RESERVATION_HOUSE_NO" property="reservationHouseNo"/>
+	</resultMap>
+	
+	<!-- 회원 resultSet -->
+	<resultMap type="Member" id="memberResultSet">
+	    <result column="USER_NO" property="userNo"/>
+	    <result column="USER_ID" property="userId"/>
+	    <result column="PASSWORD" property="password"/>
+	    <result column="NAME" property="name"/>
+	    <result column="PHONE" property="phone"/>
+	    <result column="EMAIL" property="email"/>
+	    <result column="ADDRESS" property="address"/>
+	    <result column="PET_YN" property="petYN"/>
+	    <result column="USER_GRADE" property="userGrade"/>
+	    <result column="KIND_NAME" property="kindName"/>
+	    <result column="STATUS" property="status"/>
+	    <result column="JOIN_DATE" property="joinDate"/>
+	    <result column="SITTER_STATUS" property="sitterStatus"/>
+	</resultMap>
+	
+	<!-- 장기돌봄 예약 resultSet -->
+	<resultMap type="HouseReservation" id="houseReservationResultSet">
+	    <result column="RESERVATION_HOUSE_NO" property="reservationHouseNo"/>
+	    <result column="HOUSE_NO" property="houseNo"/>
+	    <result column="ADDRESS" property="address"/>
+	    <result column="START_DATE" property="startDate"/>
+	    <result column="END_DATE" property="endDate"/>
+	    <result column="STAY_NO" property="stayNo"/>
+	    <result column="CAUTION" property="caution"/>
+	    <result column="PET_OWNER_NAME" property="petOwnerName"/>
+	    <result column="PHONE" property="phone"/>
+	    <result column="PET_NAME" property="petName"/>
+	    <result column="PET_TYPE_NO" property="petTypeNo"/>
+	    <result column="ORIGIN_NAME" property="originName"/>
+	    <result column="CHANGE_NAME" property="changeName"/>
+	    <result column="STATUS" property="status"/>
+	    <result column="PAYMENT_STATUS" property="paymentStatus"/>
+	    <result column="USER_NO" property="userId"/>
+	    <result column="TOTAL_AMOUNT" property="totalAmount"/>
+	</resultMap>
+	
+	<!-- 집정보 resultSet -->
+	<resultMap type="House" id="houseResultSet">
+	    <result column="HOUSE_NO" property="houseNo"/>
+	    <result column="OWNER_NAME" property="ownerName"/>
+	    <result column="INTRODUCTION_SUMMARY" property="introductionSummary"/>
+	    <result column="HOUSE_ADDRESS" property="houseAddress"/>
+	    <result column="INTRODUCTION_DETAILED" property="introductionDetailed"/>
+	    <result column="NEARBY_HOSPITAL" property="nearbyHospital"/>
+	    <result column="ENVIRONMENT_INFO" property="environmentInfo"/>
+	    <result column="SUPPLY_GUIDE" property="supplyGuide"/>
+	    <result column="CERTIFICATION" property="certification"/>
+	    <result column="ORIGIN_NAME_01" property="originName01"/>
+	    <result column="ORIGIN_NAME_02" property="originName02"/>
+	    <result column="ORIGIN_NAME_03" property="originName03"/>
+	    <result column="FILE_PATH" property="filePath"/>
+	    <result column="HOUSE_PET_NO" property="housePetNo"/>
+	    <result column="HOUSE_WALK_NO" property="houseWalkNo"/>
+	    <result column="PET_TYPE_NO" property="petTypeNo"/>
+	    <result column="STATUS" property="status"/>
+	</resultMap>
+	
+	<!-- 집 리뷰 resultSet -->
+	<resultMap type="LongReview" id="longReviewResultSet">
+		<result column="REVIEW_NO" property="reviewNo"/>
+		<result column="REVIEW_CONTENT" property="reviewContent"/>
+		<result column="REVIEW_DATE" property="reviewDate"/>
+		<result column="USER_NO" property="userNo"/>
+		<result column="HOUSE_NO" property="houseNo"/>
+		<result column="originName01" property="ORIGIN_NAME_01"/>
+		<result column="originName02" property="ORIGIN_NAME_02"/>
+		<result column="originName03" property="ORIGIN_NAME_03"/>
+	</resultMap>
+	
+	<!-- 병원 resultSet -->
+	<resultMap type="HospitalRe" id="hospitalReResultSet">
+	    <result column="HOS_RE_NO" property="hosReNo"/>
+	    <result column="USER_NO" property="userNo"/>
+	    <result column="PET_OWNER_NAME" property="petOwnerName"/>
+	    <result column="OWNER_PHONE" property="ownerPhone"/>
+	    <result column="HOS_NAME" property="hosName"/>
+	    <result column="HOS_PHONE" property="hosPhone"/>
+	    <result column="HOS_ADDRESS" property="hosAddress"/>
+	    <result column="RE_DATE" property="reDate"/>
+	    <result column="RE_TIME" property="reTime"/>
+	    <result column="PET_NAME" property="petName"/>
+	    <result column="PET_KIND" property="petKind"/>
+	    <result column="PET_BIRTH_DAY" property="petBirthDay"/>
+	    <result column="PET_GENDER" property="petGender"/>
+	    <result column="NEUTERED" property="neutralization"/>
+	    <result column="SPECIAL_NOTES" property="specialNotes"/>
+	    <result column="PET_TYPE_NO" property="petTypeNo"/>
+	    <result column="P.PET_TYPE_NAME" property="petTypeName"/>
+	    <result column="SYMPTOM" property="symptom"/>
+	    <result column="ORIGIN_NAME" property="originName"/>
+	    <result column="CHANGE_NAME" property="changeName"/>
+	    <result column="DISEASE_NAME" property="diseaseName"/>
+	    <result column="STATUS" property="status"/>
+	    <result column="UPDATE_DAY" property="updateDay"/>
+	</resultMap>
+	
+	
+	<!-- ============================ 단기예약 ================================ -->
+	<select id="selectSitterCount" resultType="_int">
+		SELECT COUNT(*)
+		FROM PET_SITTER P
+		WHERE P.STATUS = 'Y'
+			AND NOT EXISTS (
+		    SELECT 1
+		    FROM RESERVATION R
+		    WHERE R.PET_SITTER_NO = P.PET_SITTER_NO
+		    AND R.VISIT_DATE = TO_DATE(#{visitDate}, 'RRRR-MM-DD')
+		    AND (
+		        (R.START_TIME &lt; #{startTime} AND R.END_TIME > #{endTime})
+		    	)
+			)
+	</select>
+	<!-- 펫시터 선택화면 -->
+	<select id="selectSitter" parameterType="AvailableTimes" resultMap="petSitterResultSet">
+		SELECT P.PET_SITTER_NO,P.PET_SITTER_NAME, P.INTRODUCE
+			  ,P.DOG_KEYWORD,P.TYPE_KEYWORD
+			  ,P.ORIGIN_NAME,P.FILE_PATH
+		FROM PET_SITTER P
+		WHERE P.STATUS = 'Y'
+			AND NOT EXISTS (
+		    SELECT 1
+		    FROM RESERVATION R
+		    WHERE R.PET_SITTER_NO = P.PET_SITTER_NO
+		    AND R.VISIT_DATE = TO_DATE(#{visitDate}, 'RRRR-MM-DD')
+		    AND (
+		        (R.START_TIME &lt; #{endTime} AND R.END_TIME > #{startTime})
+		    	)
+			)
+	</select>
+	
+	<!-- 첫페이지 펫시터 리스트 -->
+	<select id="firstSitterList" resultMap="petSitterResultSet">
+		SELECT P.PET_SITTER_NO,P.PET_SITTER_NAME, P.INTRODUCE
+				  ,P.DOG_KEYWORD,P.TYPE_KEYWORD, P.PHONE
+				  ,P.ORIGIN_NAME,P.FILE_PATH
+		FROM PET_SITTER P
+	</select>
+	
+	<!-- 펫시터 선택 불가능한 날짜,시간 가져오기 -->
+	<select id="disabledDates" resultType="_int" resultMap="reservationResultSet">
+		SELECT R.RESERVATION_ID, R.VISIT_DATE, R.START_TIME, R.END_TIME
+		FROM RESERVATION R
+		WHERE PET_SITTER_NO = #{petSitterNo}
+	</select>
+	
+	
+	
+	<!-- 요금테이블에서 가격정보 가져오기 -->
+	<select id="priceTable" parameterType="AvailableTimes" resultMap="priceResultSet">
+		SELECT TOTAL_PRICE,PRICE_NAME
+		FROM PRICE
+		WHERE DURATION_NO = #{duration}
+		AND PET_TYPE_NO =#{petTypeNo}
+	</select>
+	
+	<!-- 예약정보 저장하기 -->
+	<insert id="enrollReservation" parameterType="Reservation">
+		INSERT INTO RESERVATION (
+		    RESERVATION_ID,PET_OWNER_NAME
+		   ,ADDRESS, PHONE,VISIT_DATE
+		   ,START_TIME,END_TIME, RESERVATION_DATE
+		   ,CAUTION, PET_NAME
+		   ,STATUS
+		   ,PET_SITTER_NO
+		   ,DURATION, PET_TYPE_NO
+		   ,ORIGIN_NAME, CHANGE_NAME
+		   ,PAYMENT_STATUS,USER_NO ,TOTAL_AMOUNT
+		) VALUES (
+		    RESERVATION_SEQ.NEXTVAL,
+		    #{petOwnerName},
+		    #{address},
+		    #{phone},
+		    TO_DATE(#{visitDate}, 'RR-MM-DD'),
+		    #{startTime},
+		    #{endTime},
+		    SYSDATE,
+		    #{caution},
+		    #{petName},
+		    DEFAULT,
+		    #{petSitterNo},
+		    #{duration},
+		    #{petTypeNo},
+		    #{originName},
+		    #{changeName},
+		    DEFAULT,
+		    #{userNo},
+		    #{totalAmount}
+		)
+	</insert>
+	
+	<!-- 결제전 펫시터 정보 보여주기 -->
+	<select id="sitterInfo" parameterType="Reservation" resultMap="petSitterResultSet">
+		SELECT PET_SITTER_NAME,INTRODUCE,PHONE,ORIGIN_NAME,FILE_PATH
+		FROM PET_SITTER
+		WHERE PET_SITTER_NO = #{petSitterNo}
+	</select>
+	
+	
+	<!-- 예약번호 가져오기 -->
+	<select id="selectReservationId" parameterType="Payment" resultType="_int">
+		SELECT RESERVATION_ID
+		FROM PAYMENT
+		WHERE PAYMENT_ID= #{paymentId}
+	</select>
+	<!-- ============================ 단기예약 ================================ -->
+	
+	
+	<!-- ============================ 결제 ================================ -->
+	<!-- 결제내역 저장하기 -->
+	<insert id="insertPayment" parameterType="Payment">
+		INSERT INTO PAYMENT (
+							 PAYMENT_ID
+							,PG_NAME
+							,USER_NO
+							,USER_NAME
+							,USER_ID
+							,AMOUNT
+							,PHONE
+							,ADDRESS
+							,PAYMENT_METHOD
+							,PRODUCT_NAME
+							,PAYMENT_DATE
+							,PAYMENT_STATUS
+							,DIFFERENT_NO
+							,RESERVATION_ID
+							,RESERVATION_HOUSE_NO
+							) 
+		VALUES (
+				 #{paymentId}, #{pgName}, #{userNo}, #{userName}, #{userId}
+			   , #{amount}, #{phone}, #{address}, #{paymentMethod}, #{productName}
+			   , SYSDATE,DEFAULT,#{differentNo},#{reservationNo},#{reservationHouseNo}
+				)
+	</insert>
+	
+	<!-- 결제내역 보여주기 -->
+	<select id="payDetail" parameterType="string" resultMap="paymentResultSet">
+		 SELECT  PAYMENT_ID
+		 		,PG_NAME
+				,USER_NAME
+				,USER_ID
+				,AMOUNT
+				,PHONE
+				,ADDRESS
+				,PAYMENT_METHOD
+				,PRODUCT_NAME
+				,PAYMENT_DATE
+				,S.STATUS_NAME
+				,DIFFERENT_NO
+				,RESERVATION_ID
+				,RESERVATION_HOUSE_NO
+		FROM PAYMENT P
+		JOIN PAYMENT_STATUS S ON P.PAYMENT_STATUS=S.STATUS_ID
+		WHERE PAYMENT_ID = #{paymentId}
+	</select>
+	
+	<!-- 결제확정 후 각 paymentStatus 업뎃 -->
+	<update id="updateReservation" parameterType="string">
+		UPDATE RESERVATION 
+		SET PAYMENT_STATUS = 2
+		WHERE RESERVATION_ID = #{reservationNo}
+	</update>
+	<update id="updateHouseRe" parameterType="string">
+		UPDATE HOUSE_RESERVATION
+		SET PAYMENT_STATUS = 2 
+		WHERE RESERVATION_HOUSE_NO = #{reservationHouseNo}
+	</update>
+	<update id="updatePayment" parameterType="string">
+		UPDATE PAYMENT
+		SET PAYMENT_STATUS = 2 
+		WHERE RESERVATION_ID = #{reservationNo}	
+	</update>
+	<update id="updatePayment2" parameterType="string">
+		UPDATE PAYMENT
+		SET PAYMENT_STATUS = 2 
+		WHERE RESERVATION_HOUSE_NO = #{reservationHouseNo}	
+	</update>
+	
+	<!-- 결제 statusName -->
+	<select id="statusName" parameterType="String" resultType="Payment">
+		SELECT STATUS_NAME as statusName
+		FROM PAYMENT P
+        JOIN PAYMENT_STATUS S ON P.PAYMENT_STATUS=S.STATUS_ID
+		WHERE PAYMENT_ID = #{paymentId}
+	</select>
+	
+	
+	<!-- ============================ 결제 ================================ -->
+	
+	
+	
+	<!-- ============================ 장기돌봄 예약 ================================ -->
+	
+	<!-- 장기돌봄 처음 페이지 화면 -->
+	<select id="firstHouseList" resultType="House">
+		SELECT H.HOUSE_NO AS houseNo
+		     , H.OWNER_NAME AS ownerName
+		     , H.INTRODUCTION_SUMMARY AS introductionSummary
+		     , H.HOUSE_ADDRESS AS houseAddress
+		     , H.NEARBY_HOSPITAL AS nearbyHospital
+		     , P.HOUSE_PET_NAME AS housePetNo
+		     , W.HOUSE_WALK_NAME AS houseWalkNo
+		     , T.PET_TYPE_NAME AS petTypeNo
+		     , H.ORIGIN_NAME_01 AS originName01
+		     , H.ORIGIN_NAME_02 AS originName02
+		     , H.ORIGIN_NAME_03 AS originName03
+		     , H.FILE_PATH AS filePath
+		FROM HOUSE H
+		JOIN HOUSE_PET P USING (HOUSE_PET_NO)
+		JOIN HOUSE_WALK W USING (HOUSE_WALK_NO)
+		JOIN PET_TYPE T USING (PET_TYPE_NO)
+	</select>
+	<select id="firstListCount" resultType="_int">
+		SELECT COUNT(*)
+		FROM HOUSE
+	</select>
+	
+	<!-- 장기돌봄 집리스트 조건부로 불러오기 -->
+	<select id="selectHouseList" parameterType="HouseReservation" resultType="House">
+		SELECT H.HOUSE_NO AS houseNo,
+		       H.OWNER_NAME AS ownerName,
+		       H.INTRODUCTION_SUMMARY AS introductionSummary,
+		       H.HOUSE_ADDRESS AS houseAddress,
+		       H.NEARBY_HOSPITAL AS nearbyHospital,
+		       P.HOUSE_PET_NAME AS housePetNo,
+		       W.HOUSE_WALK_NAME AS houseWalkNo,
+		       T.PET_TYPE_NAME AS petTypeNo,
+		       H.ORIGIN_NAME_01 AS originName01,
+		       H.ORIGIN_NAME_02 AS originName02,
+		       H.ORIGIN_NAME_03 AS originName03,
+		       H.FILE_PATH AS filePath
+		FROM HOUSE H
+		JOIN HOUSE_PET P ON H.HOUSE_PET_NO = P.HOUSE_PET_NO
+		JOIN HOUSE_WALK W ON H.HOUSE_WALK_NO = W.HOUSE_WALK_NO
+		JOIN PET_TYPE T ON H.PET_TYPE_NO = T.PET_TYPE_NO
+		WHERE H.HOUSE_ADDRESS LIKE '%'||#{address}||'%'
+		AND H.HOUSE_PET_NO = #{pet}
+		AND H.HOUSE_WALK_NO = #{walk}
+		AND T.PET_TYPE_NO = #{petTypeNo}
+		AND NOT EXISTS (
+		    SELECT *
+		    FROM HOUSE_RESERVATION R
+		    WHERE H.HOUSE_NO = R.HOUSE_NO
+		    AND R.START_DATE BETWEEN TO_DATE(#{startDate}, 'RRRR-MM-DD') AND TO_DATE(#{endDate}, 'RRRR-MM-DD')
+		    AND R.END_DATE BETWEEN TO_DATE(#{startDate}, 'RRRR-MM-DD') AND TO_DATE(#{endDate}, 'RRRR-MM-DD')
+		)
+	</select> 
+	
+	<!-- 페이징바 처리 -->
+	<select id="listCount" parameterType="HouseReservation" resultType="_int">
+		SELECT COUNT(*) 
+		FROM HOUSE H
+		JOIN HOUSE_PET P ON H.HOUSE_PET_NO = P.HOUSE_PET_NO
+		JOIN HOUSE_WALK W ON H.HOUSE_WALK_NO = W.HOUSE_WALK_NO
+		JOIN PET_TYPE T ON H.PET_TYPE_NO = T.PET_TYPE_NO
+		WHERE H.HOUSE_ADDRESS LIKE '%'||#{address}||'%'
+		AND H.HOUSE_PET_NO = #{pet}
+		AND H.HOUSE_WALK_NO = #{walk}
+		AND T.PET_TYPE_NO = #{petTypeNo}
+		AND NOT EXISTS (
+		    SELECT *
+		    FROM HOUSE_RESERVATION R
+		    WHERE H.HOUSE_NO = R.HOUSE_NO
+		    AND R.START_DATE BETWEEN TO_DATE(#{startDate}, 'RRRR-MM-DD') AND TO_DATE(#{endDate}, 'RRRR-MM-DD')
+		    AND R.END_DATE BETWEEN TO_DATE(#{startDate}, 'RRRR-MM-DD') AND TO_DATE(#{endDate}, 'RRRR-MM-DD')
+		)
+	</select>
+	
+	<!-- 집 상세정보 -->
+	<select id="detailHouse" parameterType="_int" resultMap="houseResultSet">
+		SELECT HOUSE_NO, OWNER_NAME, HOUSE_ADDRESS, INTRODUCTION_SUMMARY, INTRODUCTION_DETAILED,
+			   NEARBY_HOSPITAL, ORIGIN_NAME_01,ORIGIN_NAME_02,ORIGIN_NAME_03, FILE_PATH
+		FROM HOUSE
+		WHERE HOUSE_NO = #{houseNo}
+		AND STATUS = 'Y'
+	</select>
+	
+	<!-- 집 요금정보 -->
+	<select id="selectHousePrice" resultType="HousePrice">
+		SELECT STAY_NO AS stayNo,STAY_NAME AS stayName,PRICE AS price FROM HOUSE_PRICE
+	</select>
+	
+	<!-- 인증정보 -->
+	<select id="selectCertification" parameterType="_int" resultType="Certification">
+		SELECT C.CERTIFICATION_NO AS certificationNo,
+			   C.CERTIFICATION_NAME AS certificationName,
+		       C.ORIGIN_NAME AS originName,
+		       C.FILE_PATH AS filePath
+		FROM HOUSE H
+		JOIN HOUSE_CERTIFICATION HC ON H.HOUSE_NO = HC.HOUSE_NO
+		JOIN CERTIFICATION C ON HC.CERTIFICATION_NO = C.CERTIFICATION_NO
+		WHERE H.HOUSE_NO = #{houseNo}
+	</select>
+	
+	<select id="selectEnvironment" parameterType="_int" resultType="Environment">
+		SELECT E.ENVIRONMENT_NO AS environmentNo,
+		       E.ENVIRONMENT_NAME AS environmentName
+		FROM HOUSE H
+		JOIN HOUSE_ENVIRONMENT HE ON H.HOUSE_NO = HE.HOUSE_NO
+		JOIN ENVIRONMENT E ON HE.ENVIRONMENT_NO = E.ENVIRONMENT_NO
+		WHERE H.HOUSE_NO = #{houseNo}
+	</select>
+	
+	<select id="selectSupplyGuide" parameterType="_int" resultType="SupplyGuide">
+		SELECT S.SUPPLY_GUIDE_NO AS supplyGuideNo,
+		       S.SUPPLY_GUIDE_NAME AS supplyGuideName,
+		       S.ORIGIN_NAME AS originName,
+		       S.FILE_PATH AS filePath
+		FROM HOUSE H
+		JOIN HOUSE_SUPPLY_GUIDE HS ON H.HOUSE_NO = HS.HOUSE_NO
+		JOIN SUPPLY_GUIDE S ON HS.SUPPLY_GUIDE_NO = S.SUPPLY_GUIDE_NO
+		WHERE H.HOUSE_NO = #{houseNo}
+	</select>
+	
+	<insert id="enrollHouse" parameterType="HouseReservation">
+		INSERT INTO HOUSE_RESERVATION (
+									   RESERVATION_HOUSE_NO,HOUSE_NO
+		                              ,START_DATE,END_DATE
+		                              ,STAY_NO,CAUTION
+		                              ,PET_OWNER_NAME,ADDRESS,PHONE
+		                              ,STATUS,PAYMENT_STATUS
+		                              ,USER_NO,TOTAL_AMOUNT
+					                  )
+					                  VALUES(
+			                           HOUSE_RESERVATION_SEQ.NEXTVAL,#{houseNo}
+					                  ,TO_DATE(#{startDate}, 'RRRR-MM-DD'),TO_DATE(#{endDate}, 'RRRR-MM-DD')
+					                  ,#{stayNo},#{caution}
+					                  ,#{petOwnerName},#{address},#{phone}
+					                  ,DEFAULT,DEFAULT
+					                  ,#{userId},#{totalAmount}
+					                  )
+	</insert>
+	
+	<!-- 집 후기정보 -->
+	<select id="reviewCount" resultType="_int">
+		SELECT COUNT(*)
+		FROM LONG_REVIEW
+		WHERE HOUSE_NO = #{houseNo}
+	</select>
+	<select id="selectLongReview" parameterType="_int" resultType="LongReview">
+		SELECT REVIEW_NO AS reviewNo
+		     , REVIEW_CONTENT AS reviewContent
+		     , REVIEW_DATE AS reviewDate
+		     , FILE_PATH AS filePath
+		     , ORIGIN_NAME_01 AS originName01
+		     , ORIGIN_NAME_02 AS originName02
+		     , ORIGIN_NAME_03 AS originName03
+		     , M.USER_ID AS userNo
+		FROM LONG_REVIEW L, MEMBER M
+		WHERE L.USER_NO = M.USER_NO
+		AND HOUSE_NO = #{houseNo}
+	</select>
+	
+	
+	<!-- Disabled 를 위해 예약된 Date 정보 불러오기 -->
+	<select id="selectReList" parameterType="_int" resultType="HouseReservation">
+		SELECT RESERVATION_HOUSE_NO AS reservationHouseNo
+			  ,START_DATE AS startDate
+		      ,END_DATE AS  endDate
+		FROM HOUSE_RESERVATION
+		WHERE HOUSE_NO = #{houseNo}	
+	</select>
+	
+	
+	<!-- 결제 구분을 위한 reservationId 불러오기 -->
+	<select id="reservationId" resultType="_int">
+		SELECT RESERVATION_SEQ.CURRVAL
+		FROM DUAL
+	</select>
+	
+	<!-- 결제 구분을 위한 reservationHouseNo 불러오기 -->
+	<select id="houserReservationNo" resultType="_int">
+		SELECT HOUSE_RESERVATION_SEQ.CURRVAL
+		FROM DUAL
+	</select>
+	
+	<!-- 장기돌봄 선택한 요금정보 -->
+	<select id="selectPriceInfo" parameterType="_int" resultType="HousePrice">
+		SELECT STAY_NO AS stayNo,STAY_NAME AS stayName,PRICE AS price 
+		FROM HOUSE_PRICE 
+		WHERE STAY_NO =#{stayNo}
+	</select>
+	
+	<!-- ============================ 장기돌봄 예약 ================================ -->
+	
+	
+	<!-- ============================ 동물병원 ================================ -->
+	<!-- 병원 접수페이지로 -->
+	<select id="selectPreHos" parameterType="String" resultType="HospitalRe">
+		SELECT HOS_RE_NO as hosReNo,
+				RE_DATE as reDate,
+				RE_TIME as reTime
+		FROM HOSPITAL_RE
+		WHERE STATUS = 'Y'
+		AND HOS_NAME = #{hosName}
+	</select>
+	
+	<!-- 증상으로 병명 가져오기 -->
+	<select id="diseaseName" parameterType="map" resultType="String">
+		SELECT DISEASE_NAME
+		FROM DISEASE
+		WHERE 
+		<foreach item="symName" collection="symList" open="(" separator=" OR " close=")">
+			SYMPTOM LIKE '%'||#{symName}||'%'
+		</foreach>
+	</select>
+	
+	<!-- 병원 예약하기 -->
+	<insert id="insertHosRe" parameterType="HospitalRe">
+		INSERT INTO HOSPITAL_RE (
+		    HOS_RE_NO,
+		    USER_NO,
+		    PET_OWNER_NAME,
+		    OWNER_PHONE,
+		    HOS_NAME,
+		    HOS_PHONE,
+		    HOS_ADDRESS,
+		    RE_DATE,
+		    RE_TIME,
+		    PET_NAME,
+		    PET_KIND,
+		    PET_BIRTH_DAY,
+		    PET_GENDER,
+		    NEUTERED,
+		    SPECIAL_NOTES,
+		    PET_TYPE_NO,
+		    SYMPTOM,
+		    ORIGIN_NAME,
+		    CHANGE_NAME,
+		    DISEASE_NAME,
+		    STATUS,
+		    UPDATE_DAY
+		) VALUES (
+		    HOSPITAL_RE_SEQ.NEXTVAL,
+		    #{userNo},
+		    #{petOwnerName},
+		    #{ownerPhone},
+		    #{hosName},
+		    #{hosPhone},
+		    #{hosAddress},
+		    #{reDate},
+		    #{reTime},
+		    #{petName},
+		    #{petKind}, 
+		    #{petBirthDay},
+		    #{petGender},
+		    #{neutralization},
+		    #{specialNotes},
+		    #{petTypeNo},
+		    #{symptom},
+		    #{originName},
+		    #{changeName},
+		    #{diseaseName},
+		    DEFAULT,
+		    SYSDATE
+		)
+	</insert>
+	
+	<!-- 펫이름 가져오기 -->
+	<select id="selectPetType" parameterType="HospitalRe" resultType="String">
+		SELECT PET_TYPE_NAME
+		FROM PET_TYPE
+		WHERE PET_TYPE_NO = #{petTypeNo}
+	</select>
+	
+	<!-- 예약번호 가져오기 -->
+	<select id="selectHosReNo" resultType="_int">
+		SELECT HOSPITAL_RE_SEQ.CURRVAL
+		FROM DUAL
+	</select>
+	
+	<!-- 업데이트 정보와 함께 페이지 이동 -->
+	<select id="selectHospitalRe" parameterType="_int" resultType="HospitalRe">
+	    SELECT H.HOS_RE_NO AS hosReNo,
+	           H.USER_NO AS userNo,
+	           H.PET_OWNER_NAME AS petOwnerName,
+	           H.OWNER_PHONE AS ownerPhone,
+	           H.HOS_NAME AS hosName,
+	           H.HOS_PHONE AS hosPhone,
+	           H.HOS_ADDRESS AS hosAddress,
+	           H.RE_DATE AS reDate,
+	           H.RE_TIME AS reTime,
+	           H.PET_NAME AS petName,
+	           H.PET_KIND AS petKind,
+	           H.PET_BIRTH_DAY AS petBirthDay,
+	           H.PET_GENDER AS petGender,
+	           H.NEUTERED AS neutralization,
+	           H.SPECIAL_NOTES AS specialNotes,
+	           H.PET_TYPE_NO AS petTypeNo,
+	           P.PET_TYPE_NAME AS petTypeName,
+	           H.SYMPTOM AS symptom,
+	           H.ORIGIN_NAME AS originName,
+	           H.CHANGE_NAME AS changeName,
+	           H.DISEASE_NAME AS diseaseName,
+	           H.STATUS AS status,
+	           H.UPDATE_DAY AS updateDay
+		FROM HOSPITAL_RE H
+		JOIN PET_TYPE P ON (H.PET_TYPE_NO = P.PET_TYPE_NO)
+		WHERE HOS_RE_NO = #{hosReNo}
+		AND H.STATUS = 'Y'	
+	</select>
+	
+	<!-- 예약정보 업데이트 -->
+	<update id="hospitalEnrollUp" parameterType="HospitalRe">
+		UPDATE HOSPITAL_RE
+		SET  USER_NO = #{userNo}
+		     ,PET_OWNER_NAME = #{petOwnerName}
+		     ,OWNER_PHONE = #{ownerPhone}
+		     ,HOS_NAME = #{hosName}
+		     ,HOS_PHONE = #{hosPhone}
+		     ,HOS_ADDRESS = #{hosAddress}
+		     ,RE_DATE = TO_DATE(#{reDate},'RRRR-MM-DD')
+		     ,RE_TIME = #{reTime}
+		     ,PET_NAME = #{petName}
+		     ,PET_KIND = #{petKind}
+		     ,PET_BIRTH_DAY = TO_DATE(#{petBirthDay},'RRRR-MM-DD')
+		     ,PET_GENDER = #{petGender}
+		     ,NEUTERED = #{neutralization}
+		     ,SPECIAL_NOTES = #{specialNotes}
+		     ,PET_TYPE_NO = #{petTypeNo}
+		     ,SYMPTOM = #{symptom}
+		     ,ORIGIN_NAME = #{originName}
+		     ,CHANGE_NAME = #{changeName}
+		     ,DISEASE_NAME = #{diseaseName}
+		WHERE HOS_RE_NO = #{hosReNo}
+	</update>
+	
+	<!-- 예약내역 불러오기 -->
+	<select id="hospitalChk" parameterType="_int" resultType="HospitalRe">
+		SELECT H.HOS_RE_NO AS hosReNo,
+	           H.USER_NO AS userNo,
+	           H.PET_OWNER_NAME AS petOwnerName,
+	           H.OWNER_PHONE AS ownerPhone,
+	           H.HOS_NAME AS hosName,
+	           H.HOS_PHONE AS hosPhone,
+	           H.HOS_ADDRESS AS hosAddress,
+	           H.RE_DATE AS reDate,
+	           H.RE_TIME AS reTime,
+	           H.PET_NAME AS petName,
+	           H.PET_KIND AS petKind,
+	           H.PET_BIRTH_DAY AS petBirthDay,
+	           H.PET_GENDER AS petGender,
+	           H.NEUTERED AS neutralization,
+	           H.SPECIAL_NOTES AS specialNotes,
+	           H.PET_TYPE_NO AS petTypeNo,
+	           P.PET_TYPE_NAME AS petTypeName,
+	           H.SYMPTOM AS symptom,
+	           H.ORIGIN_NAME AS originName,
+	           H.CHANGE_NAME AS changeName,
+	           H.DISEASE_NAME AS diseaseName,
+	           H.STATUS AS status,
+	           H.UPDATE_DAY AS updateDay
+		FROM HOSPITAL_RE H
+		JOIN PET_TYPE P ON (H.PET_TYPE_NO = P.PET_TYPE_NO)
+		WHERE H.USER_NO = #{userNo}
+		AND	H.STATUS = 'Y'	
+	</select>
+	
+	<!-- 예약내역 삭제하기 -->
+	<update id="hospitalDelete" parameterType="_int">
+		UPDATE HOSPITAL_RE
+		SET STATUS = 'N'
+		WHERE HOS_RE_NO = #{hosRe}
+	</update>
+	
+	<!-- ============================ 동물병원 ================================ -->
+	
+	<!-- ============================ 메인페이지 ================================ -->
+	<select id="mainSitter" resultType="PetSitter">
+		WITH RankedSitter AS (
+		    SELECT 
+		        PET_SITTER_NO
+		       ,COUNT(*) AS sitter_count
+		       ,RANK() OVER (ORDER BY COUNT(*) DESC) AS rank
+		    FROM
+		        RESERVATION
+		    GROUP BY
+		        PET_SITTER_NO
+		)
+		SELECT P.PET_SITTER_NO AS petSitterNo
+			  ,P.PET_SITTER_NAME AS petSitterName
+		      ,P.INTRODUCE AS introduce
+		      ,P.DOG_KEYWORD AS dogKeyword
+			  ,P.TYPE_KEYWORD AS typeKeyword
+			  ,P.PHONE AS phone
+		      ,P.ORIGIN_NAME AS originName
+		      ,P.FILE_PATH AS filePath
+		FROM PET_SITTER P
+		JOIN RankedSitter RS ON P.PET_SITTER_NO = RS.PET_SITTER_NO
+		WHERE RS.rank = 1	
+	</select>
+	<select id="mainHouse" resultType="House">
+		WITH RankedHouse AS (
+		    SELECT
+		        HOUSE_NO
+		       ,COUNT(*) AS house_count
+		       ,RANK() OVER (ORDER BY COUNT(*) DESC) AS rank
+		    FROM
+		        HOUSE_RESERVATION
+		    GROUP BY
+		        HOUSE_NO
+		)
+		SELECT H.HOUSE_NO AS houseNo
+				,H.OWNER_NAME AS ownerName
+				,H.INTRODUCTION_SUMMARY AS introductionSummary
+				,H.HOUSE_ADDRESS AS houseAddress
+				,H.INTRODUCTION_DETAILED AS introductionDetailed
+				,H.NEARBY_HOSPITAL AS nearbyHospital
+				,P.HOUSE_PET_NAME AS housePetNo
+				,W.HOUSE_WALK_NAME AS houseWalkNo
+				,T.PET_TYPE_NAME AS petTypeNo
+				,H.ORIGIN_NAME_01 AS originName01
+				,H.ORIGIN_NAME_02 AS originName02
+				,H.ORIGIN_NAME_03 AS originName03
+				,H.FILE_PATH AS filePath
+		FROM HOUSE H
+		JOIN RankedHouse RH ON H.HOUSE_NO = RH.HOUSE_NO
+				JOIN HOUSE_PET P USING (HOUSE_PET_NO)
+				JOIN HOUSE_WALK W USING (HOUSE_WALK_NO)
+				JOIN PET_TYPE T USING (PET_TYPE_NO)
+		WHERE RH.rank = 1	
+	</select>
+	<select id="mainHospital" resultType="HospitalRe">
+		WITH RankedHospital AS (
+		    SELECT
+		        HOS_NAME,HOS_PHONE,HOS_ADDRESS
+		       ,COUNT(*) AS reservation_count
+		       ,RANK() OVER (ORDER BY COUNT(*) DESC) AS rn
+		    FROM 
+		        HOSPITAL_RE
+		    GROUP BY
+		        HOS_NAME,HOS_PHONE,HOS_ADDRESS
+		)
+		SELECT R.HOS_NAME AS hosName
+			  ,R.HOS_PHONE AS hosPhone
+			  ,R.HOS_ADDRESS AS hosAddress
+		FROM RankedHospital R
+		WHERE rn = 1		
+	</select>
+
+	<!-- ============================ 메인페이지 ================================ -->
+</mapper>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

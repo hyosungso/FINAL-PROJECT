@@ -1,0 +1,246 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="weddingMapper">
+
+<select id="selectBreeds" resultType="Breed">
+SELECT BREED_ID breedId
+,BREED_NAME breedName
+FROM BREED
+</select>
+
+<select id="selectWeddings" resultType="Wedding">
+SELECT WEDDING_NO weddingNo,
+PET_NAME petName,
+P.PET_GENDER gender,
+B.BREED_NAME breed,
+USER_NO userNo,
+PEDIGREE pedigree,
+MEETING_METHOD meetingMethod,
+PET_INTRO petIntro,
+PET_NOTE petNote,
+ORIGIN_NAME originName,
+CHANGE_NAME changeName
+FROM WEDDING W, PET P, BREED B 
+WHERE W.APPROVAL ='Y'
+AND W.PET_NO = P.PET_NO
+AND P.BREED_ID = B.BREED_ID
+</select>
+
+<select id="selectWedding" parameterType="_int" resultType="Wedding">
+SELECT WEDDING_NO weddingNo
+,P.PET_NO petNo
+,P.PET_NAME petName
+,B.BREED_NAME breed
+,M.USER_NO userNo
+,M.NAME userName
+,P.PET_AGE petAge
+,P.WEIGHT weight
+,PEDIGREE pedigree
+,P.PET_GENDER gender
+,MEETING_METHOD meetingMethod
+,PET_INTRO petIntro
+,PET_NOTE petNote
+,ORIGIN_NAME originName
+,CHANGE_NAME changeName
+,APPROVAL approval
+,REASON reason
+,PARTNER_NO partnerNo
+FROM WEDDING W, PET P, BREED B, MEMBER M
+WHERE W.PET_NO = P.PET_NO
+AND B.BREED_ID = P.BREED_ID
+AND W.USER_NO = M.USER_NO
+AND WEDDING_NO= #{weddingNo}
+</select>
+
+<select id="selectPets" parameterType="_int" resultType="Pet">
+SELECT PET_NO petNo
+,BREED_NAME breed
+,OWNER_NO ownerNo
+,PET_NAME petName
+,PET_AGE petAge
+,PET_GENDER petGender
+,WEIGHT weight
+FROM PET
+JOIN BREED USING(BREED_ID)
+WHERE OWNER_NO = #{userNo}
+</select>
+
+<insert id="insertWedding" parameterType="Wedding">
+INSERT INTO WEDDING 
+VALUES(SEQ_WED.NEXTVAL
+,#{petNo}
+,#{userNo}
+,#{pedigree}
+,DEFAULT
+,#{petIntro}
+,#{petNote}
+,#{originName}
+,#{changeName}
+,'N'
+,DEFAULT
+,DEFAULT)
+
+</insert>
+
+<insert id="insertVaccine" parameterType="Vaccine">
+	INSERT INTO	VACCINE VALUES(SEQ_VAC.NEXTVAL
+			,#{petNo}
+			,#{originName}
+			,#{changeName}
+			)
+</insert>
+
+<update id="updateWedding" parameterType="Wedding">
+UPDATE WEDDING SET PEDIGREE = #{pedigree}
+,MEETING_METHOD = #{meetingMethod}
+,PET_INTRO = #{petIntro}
+,PET_NOTE = #{petNote}
+,ORIGIN_NAME = #{originName}
+,CHANGE_NAME = #{changeName}
+WHERE WEDDING_NO = #{weddingNo}
+</update>
+
+<select id="selectRegList" resultType="Wedding">
+SELECT WEDDING_NO weddingNo
+,P.PET_NAME petName
+,B.BREED_NAME breed
+,M.NAME userName
+,PEDIGREE pedigree
+,MEETING_METHOD meetingMethod
+,PET_INTRO petIntro
+,PET_NOTE petNote
+,W.ORIGIN_NAME originName
+,W.CHANGE_NAME changeName
+,APPROVAL approval
+FROM WEDDING W,PET P,BREED B, MEMBER M
+WHERE W.PET_NO = P.PET_NO
+AND W.USER_NO = P.OWNER_NO
+AND B.BREED_ID = P.BREED_ID
+AND W.USER_NO = M.USER_NO
+</select>
+
+<update id="rejectReg" parameterType="Wedding">
+UPDATE WEDDING 
+SET APPROVAL = 'R'
+,REASON = #{reason}
+WHERE WEDDING_NO = #{weddingNo}
+</update>
+
+<update id="approveReg" parameterType="_int">
+UPDATE WEDDING
+SET APPROVAL = 'Y'
+WHERE WEDDING_NO = #{weddingNo}
+</update>
+
+<select id="countAppliedList" parameterType="_int" resultType="_int">
+SELECT COUNT(*) COUNT FROM WEDDING
+WHERE USER_NO = #{userNo}
+AND APPROVAL = 'N'
+</select>
+
+<insert id="applyMatching" parameterType="Wedding">
+INSERT INTO WEDDING VALUES (SEQ_WED.NEXTVAL
+,#{petNo}
+,#{userNo}
+,#{pedigree}
+,#{meetingMethod}
+,#{petIntro}
+,#{petNote}
+,#{originName}
+,#{changeName}
+,'W'
+,DEFAULT
+,#{partnerNo}
+)
+</insert>
+
+<select id="selectAppliedList" parameterType="Wedding" resultType="Wedding">
+SELECT 
+M.WEDDING_NO weddingNo
+,M.PET_NO petNo
+,M.USER_NO userNo
+,M.PET_NAME petName
+,PT.PET_NAME partnerName
+,M.PARTNER_NO partnerNo
+,M.MEETING_METHOD meetingMethod
+,M.APPROVAL approval
+FROM
+(SELECT W.WEDDING_NO
+,W.PET_NO
+,W.USER_NO
+,P.PET_NAME
+,W.PARTNER_NO
+,W.MEETING_METHOD
+,W.APPROVAL
+FROM WEDDING W, PET P
+WHERE W.PET_NO = P.PET_NO
+AND W.USER_NO = #{userNo})M
+LEFT JOIN PET PT ON (PT.PET_NO = M.PARTNER_NO)
+</select>
+<select id="selectReceivedList" parameterType="Wedding" resultType="Wedding" >
+SELECT
+DISTINCT
+W.WEDDING_NO weddingNo
+,W.USER_NO userNo
+,PT.PET_NO petNo
+,PTP.PET_NAME petName
+,P.PET_NAME partnerName
+,W.MEETING_METHOD meetingMethod
+,W.APPROVAL approval
+FROM WEDDING W 
+JOIN WEDDING PT ON (W.PARTNER_NO = PT.PET_NO)
+JOIN PET P ON(W.PET_NO = P.PET_NO)
+JOIN PET PTP ON (PT.PET_NO = PTP.PET_NO)
+WHERE PT.USER_NO = #{userNo}
+</select>
+<update id="acceptWedding" parameterType="_int">
+UPDATE WEDDING SET APPROVAL = 'A'
+WHERE WEDDING_NO = #{weddingNo}
+</update>
+<select id="selectByBreed" parameterType="string" resultType="Wedding">
+SELECT WEDDING_NO weddingNo,
+PET_NAME petName,
+P.PET_GENDER gender,
+B.BREED_NAME breed,
+USER_NO userNo,
+PEDIGREE pedigree,
+MEETING_METHOD meetingMethod,
+PET_INTRO petIntro,
+PET_NOTE petNote,
+ORIGIN_NAME originName,
+CHANGE_NAME changeName
+FROM WEDDING W, PET P, BREED B 
+WHERE W.APPROVAL ='Y'
+AND W.PET_NO = P.PET_NO
+AND P.BREED_ID = B.BREED_ID
+AND P.BREED_ID = #{breedId}
+</select>
+<update id="cancelWedding" parameterType="_int">
+UPDATE WEDDING
+SET APPROVAL = 'R'
+WHERE WEDDING_NO = #{weddingNo}
+</update>
+<select id="selectPetByNo" parameterType="_int" resultType="Pet">
+SELECT B.BREED_NAME breed
+	,P.PET_NAME petName
+	,P.PET_AGE petAge
+	,P.PET_GENDER petGender
+	,P.WEIGHT weight
+FROM PET P,BREED B
+WHERE P.BREED_ID = B.BREED_ID
+AND P.PET_NO = #{petNo}
+</select>
+<select id="getContactInfo" parameterType="_int" resultType="Member">
+SELECT NAME name
+	, PHONE phone
+	, EMAIL email
+FROM MEMBER WHERE USER_NO IN 
+((SELECT USER_NO FROM WEDDING WHERE WEDDING_NO = #{weddingNo}),
+(SELECT OWNER_NO FROM PET WHERE PET_NO = (SELECT PARTNER_NO FROM WEDDING WHERE WEDDING_NO =#{weddingNo})))
+</select>
+<delete id="deleteWedding" parameterType="_int">
+DELETE FROM WEDDING WHERE WEDDING_NO = #{weddingNo}
+</delete>
+</mapper>

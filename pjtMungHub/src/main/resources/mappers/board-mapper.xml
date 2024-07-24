@@ -1,0 +1,268 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="boardMapper">
+
+ 	<resultMap type="Board" id="boardResultSet">
+		<result column="BOARD_NO" property="boardNo" />
+		<result column="CATEGORY_NO" property="categoryNo" />
+		<result column="BREED_ID" property="breedId" />
+		<result column="BOARD_TITLE" property="boardTitle" />
+		<result column="USER_ID" property="boardWriter" />
+		<result column="BOARD_CONTENT" property="boardContent" />
+		<result column="COUNT" property="count" />
+		<result column="RECOMMEND" property="recommend" />
+		<result column="UPLOAD_DATE" property="uploadDate" />
+		<result column="REVISE_DATE" property="reviseDate" />
+		<result column="STATUS" property="status" />
+	</resultMap> 
+
+	<select id="listCount" resultType="_int" parameterType="_int">
+		SELECT COUNT(*)
+		FROM BOARD
+		WHERE STATUS ='Y'
+		<if test="category != 0">
+		AND CATEGORY_NO =#{category}
+		</if>
+	</select>
+	<select id="selectList" resultType="Board" parameterType="com.kh.pjtMungHub.board.model.vo.ParameterVo">
+		SELECT BOARD_NO boardNo
+			,BOARD_TITLE boardTitle
+			,USER_ID boardWriter
+			,CATEGORY_NO category
+			,COUNT count
+			,RECOMMEND recommend
+			,UPLOAD_DATE uploadDate
+			,B.STATUS
+		FROM BOARD B
+		JOIN MEMBER M ON M.USER_NO=B.BOARD_WRITER
+		WHERE B.STATUS='Y'
+	<if test="category!=0">
+		AND CATEGORY_NO = #{category}
+	</if>
+ 		ORDER BY
+		<choose>
+			<when test="sort == 'latest'">
+				UPLOAD_DATE DESC
+			</when>
+			<when test="sort == 'view'">
+				COUNT DESC
+			</when>
+			<when test="sort == 'recommned'">
+				RECOMMEND DESC
+			</when>
+			<otherwise>
+				UPLOAD_DATE DESC
+			</otherwise>
+		</choose>
+
+	</select>
+	<select id="searchList" resultType="Board" parameterType="com.kh.pjtMungHub.board.model.vo.ParameterVo">
+		SELECT BOARD_NO boardNo
+			,BOARD_TITLE boardTitle
+			,USER_ID boardWriter
+			,COUNT count
+			,RECOMMEND recommend
+			,UPLOAD_DATE uploadDate
+			,B.STATUS
+		FROM BOARD B
+		JOIN MEMBER M ON M.USER_NO=B.BOARD_WRITER
+		WHERE B.STATUS='Y'
+	<if test="category!=0">
+		AND CATEGORY_NO = #{category}
+	</if>
+ 		ORDER BY
+		<choose>
+			<when test="sort == 'latest'">
+				UPLOAD_DATE DESC
+			</when>
+			<when test="sort == 'view'">
+				COUNT DESC
+			</when>
+			<when test="sort == 'recommned'">
+				RECOMMEND DESC
+			</when>
+			<otherwise>
+				UPLOAD_DATE DESC
+			</otherwise>
+		</choose>
+
+	</select>
+
+	<select id="selectCategory"
+		resultType="com.kh.pjtMungHub.board.model.vo.Category">
+		SELECT CATEGORY_NO categoryNo
+			  ,CATEGORY_NAME categoryName
+		FROM BOARD_CATEGORY
+	</select>
+
+	<update id="increaseCount" parameterType="_int">
+		UPDATE BOARD
+		SET COUNT = (COUNT+1)
+		WHERE BOARD_NO = #{boardNo}
+		AND STATUS ='Y'
+	</update>
+	
+	<select id="selectBoard" parameterType="_int" resultType="Board" >
+		SELECT BOARD_NO boardNo
+			  ,BOARD_TITLE boardTitle
+			  ,USER_ID boardWriter
+			  ,COUNT count
+			  ,RECOMMEND recommend
+			  ,UPLOAD_DATE uploadDate
+			  ,BOARD_CONTENT boardContent
+		FROM BOARD B
+		JOIN MEMBER M ON M.USER_NO=B.BOARD_WRITER
+		WHERE B.BOARD_NO = #{boardNo}
+		AND B.STATUS = 'Y'
+	</select>
+
+	<insert id="insertBoard" parameterType="Board">
+		INSERT INTO BOARD(BOARD_NO
+						 ,CATEGORY_NO
+						 ,BOARD_TITLE
+						 ,BOARD_WRITER
+						 ,BOARD_CONTENT
+		)
+		VALUES (SEQ_BOARD.NEXTVAL
+				,#{category}
+				,#{boardTitle}
+				,#{boardWriter}
+				,#{boardContent}
+				)
+	</insert>
+	
+	<delete id="deleteBoard" parameterType="_int">
+		DELETE FROM
+		BOARD 
+		WHERE BOARD_NO = #{boardNo}
+		AND STATUS='Y'
+	</delete>
+	<delete id="deleteAttachment" parameterType="_int">
+		DELETE FROM
+		BOARD_ATTACHMENT 
+		WHERE ATT_BNO = #{boardNo}
+		AND FILE_STATUS='Y'
+	</delete>
+	
+	<update id="updateBoard" parameterType="_int">
+		UPDATE BOARD
+		SET	BOARD_TITLE = #{boardTitle}
+		   ,BOARD_CONTENT = #{boardContent}
+		WHERE BOARD_NO = #{boardNo}
+		AND STATUS = 'Y'
+	</update>
+	
+	<update id="updateAttachment" parameterType="com.kh.pjtMungHub.board.model.vo.Attachment">
+		UPDATE BOARD_ATTACHMENT
+		<foreach collection="aList" item="arr" >
+		SET	ORIGIN_NAME = #{originName},
+			CHANGE_NAME = #{changeName},
+			FILE_PATH = #{filePath},
+			FILE_LEVEL = #{fileLevel},
+			FILE_TYPE = #{fileType}
+		WHERE ATT_BNO = #{boardNo}
+		AND STATUS = 'Y'
+		</foreach>
+	</update>
+	<insert id="insertAttachment" parameterType="com.kh.pjtMungHub.board.model.vo.Attachment">
+	INSERT ALL
+	<foreach collection="aList" item="arr">
+	INTO BOARD_ATTACHMENT(ATT_BNO,
+						 ORIGIN_NAME,
+						 CHANGE_NAME,
+						 FILE_PATH,
+						 FILE_LEVEL,
+						 FILE_TYPE
+		         ) 
+		         VALUES (SEQ_BOARD.CURRVAL,
+						#{arr.originName},
+						#{arr.changeName},
+						#{arr.filePath},
+						#{arr.fileLevel},
+						#{arr.fileType}
+						)
+	</foreach>
+	SELECT * FROM DUAL 
+	</insert>
+
+
+
+
+
+	<select id="selectAttachmentList"
+		resultType="com.kh.pjtMungHub.board.model.vo.Attachment">
+		SELECT
+		FILE_LEVEL fileLevel,
+		ORIGIN_NAME originName,
+		CHANGE_NAME changeName,
+		UPLOAD_DATE uploadDate,
+		FILE_PATH filePath,
+		FILE_TYPE fileType
+		FROM BOARD_ATTACHMENT
+		WHERE ATT_BNO=#{boardNo}
+		ORDER BY FILE_LEVEL
+	</select>
+	<select id="likeCount" parameterType="com.kh.pjtMungHub.board.model.vo.Recommend" resultType="_int">
+	SELECT RCOUNT
+	FROM BOARD_RECOMMEND BR
+	WHERE BOARD_NO = #{boardNo}
+	JOIN BOARD B ON BR.BOARD_NO=R.BOARD_NO
+	AND BR.STATUS='Y'
+	</select>
+	<update id="updateLike" parameterType="com.kh.pjtMungHub.board.model.vo.Recommend">
+	MERGE INTO BOARD_RECOMMEND BR
+	USING DUAL
+	ON (BOARD_NO=#{boardNo} AND USER_NO=#{userNo})
+	WHEN MATCHED THEN
+    UPDATE SET 
+    STATUS='N'
+    AND (RECOMMEND-1)
+	WHEN NOT MATCHED THEN
+    INSERT (BOARD_NO,USER_NO,RECOMMEND),
+	VALUES
+	(#{boardNo},#{userNo},(RECOMMEND+1))
+	</update>
+	<delete id="deleteLike" parameterType="com.kh.pjtMungHub.board.model.vo.Recommend">
+	DELETE FROM BOARD_RECOMMEND
+	WHERE BOARD_NO=#{boardNo}
+	AND STATUS='N'
+	</delete>
+	
+	
+	<!-- 여기는 댓글 추가기능입니다. -->
+	<select id="replyList" parameterType="_int" 
+	resultType="Reply" >
+		SELECT REPLY_NO replyNo
+			  ,REPLY_CONTENT replyContent
+			  ,USER_ID replyWriter
+			  ,BOARD_NO refBno
+			  ,M.USER_NO replyWriter
+			  ,CREATE_DATE createDate
+		FROM BOARD_REPLY R
+		JOIN BOARD B ON B.BOARD_NO = R.REF_BNO
+		JOIN MEMBER M ON M.USER_NO = R.REPLY_WRITER
+		WHERE REF_BNO = #{boardNo}
+		AND REPLY_STATUS ='Y'
+		ORDER BY CREATE_DATE DESC
+	</select>
+	<insert id="insertReply" parameterType="Reply">
+	INSERT INTO BOARD_REPLY(REPLY_NO
+						   ,REPLY_CONTENT
+				           ,REPLY_WRITER
+				           ,REF_BNO)
+					VALUES(SEQ_BRE.NEXTVAL
+						   ,#{replyContent}
+						   ,#{replyWriter}
+						   ,#{refBno})
+	</insert>
+	<delete id="deleteReply" parameterType="_int">
+	DELETE FROM 
+	BOARD_REPLY
+	WHERE REPLY_NO = ${replyNo}
+	AND REPLY_WRITER =${userNo}
+	</delete>
+	
+
+</mapper>

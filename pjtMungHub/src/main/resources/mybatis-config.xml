@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+  PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+	<settings>
+		<setting name="jdbcTypeForNull" value="NULL" />
+	</settings>
+	<typeAliases>
+
+	
+	<typeAlias type="com.kh.pjtMungHub.petcare.model.vo.HospitalRe" alias="HospitalRe"/>
+	<typeAlias type="com.kh.pjtMungHub.petcare.model.vo.Disease" alias="Disease"/>
+	<typeAlias type="com.kh.pjtMungHub.petcare.model.vo.LongReview" alias="LongReview"/>
+	<typeAlias type="com.kh.pjtMungHub.petcare.model.vo.SupplyGuide" alias="SupplyGuide"/>
+	<typeAlias type="com.kh.pjtMungHub.petcare.model.vo.Environment" alias="Environment"/>
+	<typeAlias type="com.kh.pjtMungHub.petcare.model.vo.Certification" alias="Certification"/>
+	<typeAlias type="com.kh.pjtMungHub.petcare.model.vo.HousePrice" alias="HousePrice"/>
+	<typeAlias type="com.kh.pjtMungHub.petcare.model.vo.House" alias="House"/>
+	<typeAlias type="com.kh.pjtMungHub.petcare.model.vo.HouseReservation" alias="HouseReservation"/>
+	<typeAlias type="com.kh.pjtMungHub.petcare.model.vo.Payment" alias="Payment"/>
+	<typeAlias type="com.kh.pjtMungHub.petcare.model.vo.Price" alias="Price"/>
+	<typeAlias type="com.kh.pjtMungHub.petcare.model.vo.Reservation" alias="Reservation"/>
+    <typeAlias type="com.kh.pjtMungHub.petcare.model.vo.AvailableTimes" alias="AvailableTimes"/>
+    <typeAlias type="com.kh.pjtMungHub.petcare.model.vo.PetSitter" alias="PetSitter"/>
+    <typeAlias type="com.kh.pjtMungHub.shop.model.vo.Product" alias="Product"/>
+    <typeAlias type="com.kh.pjtMungHub.shop.model.vo.Attachment" alias="Attachment"/>
+    <typeAlias type="com.kh.pjtMungHub.kindergarten.model.vo.Kindergarten" alias="Kindergarten"/>
+	<typeAlias type="com.kh.pjtMungHub.member.model.vo.Member" alias="Member"/>
+	<typeAlias type="com.kh.pjtMungHub.board.model.vo.Board" alias="Board"/>
+	<typeAlias type="com.kh.pjtMungHub.board.model.vo.Reply" alias="Reply"/>
+	<typeAlias type="com.kh.pjtMungHub.pet.model.vo.Pet" alias="Pet"/>
+	<typeAlias type="com.kh.pjtMungHub.kindergarten.model.vo.Registration" alias="Registration"/>
+	<typeAlias type="com.kh.pjtMungHub.common.model.vo.PetPhoto" alias="PetPhoto"/>
+	<typeAlias type="com.kh.pjtMungHub.kindergarten.model.vo.Vaccine" alias="Vaccine"/>
+	<typeAlias type="com.kh.pjtMungHub.shop.model.vo.Cart" alias="Cart"/>
+	<typeAlias type="com.kh.pjtMungHub.member.model.vo.Message" alias="Message"/>
+	<typeAlias type="com.kh.pjtMungHub.pet.model.vo.Breed" alias="Breed"/>
+	<typeAlias type="com.kh.pjtMungHub.wedding.model.vo.Wedding" alias="Wedding"/>
+	<typeAlias type="com.kh.pjtMungHub.chatting.vo.MessageVO" alias="Chat"/>
+	</typeAliases>
+	
+</configuration>
